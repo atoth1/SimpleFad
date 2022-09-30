@@ -1,0 +1,16 @@
+#ifndef SIMPLEFAD_CONFIG_HPP
+#define SIMPLEFAD_CONFIG_HPP
+
+// Enable runtime bounds checking on derivative containers
+#cmakedefine ENABLE_EXCEPTIONS
+
+// Support for required functions in <cmath> as constexpr
+#cmakedefine CMATH_SUPPORTS_CONSTEXPR
+
+#ifdef CMATH_SUPPORTS_CONSTEXPR
+#define SIMPLEFAD_CONSTEXPR constexpr
+#else
+#define SIMPLEFAD_CONSTEXPR
+#endif
+
+#endif
