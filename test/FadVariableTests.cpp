@@ -34,7 +34,7 @@ TYPED_TEST(FadVariableTest, DynamicFadConstructors) {
   static constexpr auto eps = TestFixture::eps;
 
   // Construct with 0 derivatives
-  DynamicFad fad1(one, size);
+  DynamicFad fad1(size, one);
   EXPECT_NEAR(fad1.val(), one, eps);
   EXPECT_EQ(fad1.dsize(), size);
   EXPECT_NEAR(fad1.dval(0), zero, eps);
@@ -44,7 +44,7 @@ TYPED_TEST(FadVariableTest, DynamicFadConstructors) {
   EXPECT_NEAR(fad1.dval(4), zero, eps);
 
   // Construct with single component derivative initialization
-  DynamicFad fad2(one, size, 2, one);
+  DynamicFad fad2(size, one, 2, one);
   EXPECT_NEAR(fad2.val(), one, eps);
   EXPECT_EQ(fad2.dsize(), size);
   EXPECT_NEAR(fad2.dval(0), zero, eps);
@@ -91,7 +91,7 @@ TYPED_TEST(FadVariableTest, DynamicFadAssignmentOperator) {
 
   // Generated copy assignment
   DynamicFad fad1(one, {one, two, one, two, one});
-  DynamicFad fad2(zero, size);
+  DynamicFad fad2(size);
   fad2 = fad1;
   EXPECT_NEAR(fad2.val(), fad1.val(), eps);
   EXPECT_EQ(fad2.dsize(), size);
@@ -148,7 +148,7 @@ TYPED_TEST(FadVariableTest, DynamicFadExpectedExceptions) {
   using DynamicFad = typename TestFixture::DynamicFad;
   static constexpr auto one = TestFixture::one;
   static constexpr auto size = TestFixture::dynamicSize;
-  DynamicFad fad(one, size);
+  DynamicFad fad(size);
   EXPECT_THROW(fad.dvalNonConst(size) = 0., SimpleFad::BoundsError);
 }
 #endif
@@ -163,7 +163,7 @@ TYPED_TEST(FadVariableTest, StaticFadConstructors) {
   static constexpr auto eps = TestFixture::eps;
 
   // Construct with 0 derivatives
-  StaticFad fad1(one, size);
+  StaticFad fad1(size, one);
   EXPECT_NEAR(fad1.val(), one, eps);
   EXPECT_EQ(fad1.dsize(), size);
   EXPECT_NEAR(fad1.dval(0), zero, eps);
@@ -173,7 +173,7 @@ TYPED_TEST(FadVariableTest, StaticFadConstructors) {
   EXPECT_NEAR(fad1.dval(4), zero, eps);
 
   // Construct with single component derivative initialization
-  StaticFad fad2(one, size, 2, one);
+  StaticFad fad2(size, one, 2, one);
   EXPECT_NEAR(fad2.val(), one, eps);
   EXPECT_EQ(fad2.dsize(), size);
   EXPECT_NEAR(fad2.dval(0), zero, eps);
@@ -225,7 +225,7 @@ TYPED_TEST(FadVariableTest, StaticFadAssignmentOperator) {
 
   // Generated copy assignment
   StaticFad fad1(one, {one, two, one, two, one});
-  StaticFad fad2(zero, size);
+  StaticFad fad2(size);
   fad2 = fad1;
   EXPECT_NEAR(fad2.val(), fad2.val(), eps);
   EXPECT_EQ(fad2.dsize(), size);
@@ -289,9 +289,9 @@ TYPED_TEST(FadVariableTest, StaticFadExpectedExceptions) {
   static constexpr auto one = TestFixture::one;
   static constexpr auto size = TestFixture::staticSize;
 
-  StaticFad fad1(one, 5);
+  StaticFad fad1(5);
   EXPECT_THROW(fad1.dvalNonConst(size) = one, SimpleFad::BoundsError);
-  MismatchedStaticFad fad2(one, 4);
+  MismatchedStaticFad fad2(4);
   EXPECT_THROW(StaticFad fad3(fad2), SimpleFad::BoundsError);
   EXPECT_THROW(fad1 = fad2, SimpleFad::BoundsError);
 }
@@ -309,7 +309,7 @@ TYPED_TEST(FadVariableTest, StaticFadConstexprConstructors) {
   static constexpr auto eps = TestFixture::eps;
 
   // Construct with 0 derivatives
-  constexpr StaticFad fad1(one, size);
+  constexpr StaticFad fad1(size, one);
   static_assert(SimpleFad::checkFloatingEquality(fad1.val(), one, eps));
   static_assert(fad1.dsize() == size);
   static_assert(SimpleFad::checkFloatingEquality(fad1.dval(0), zero, eps));
@@ -319,7 +319,7 @@ TYPED_TEST(FadVariableTest, StaticFadConstexprConstructors) {
   static_assert(SimpleFad::checkFloatingEquality(fad1.dval(4), zero, eps));
 
   // Construct with single component derivative initialization
-  constexpr StaticFad fad2(one, size, 2, one);
+  constexpr StaticFad fad2(size, one, 2, one);
   static_assert(SimpleFad::checkFloatingEquality(fad2.val(), one, eps));
   static_assert(fad2.dsize() == size);
   static_assert(SimpleFad::checkFloatingEquality(fad2.dval(0), zero, eps));
@@ -364,8 +364,8 @@ namespace {
 template<class Scalar>
 constexpr SimpleFad::StaticFadVariable<Scalar, 5> constexprGeneratedAssignment() {
   using FadType = SimpleFad::StaticFadVariable<Scalar, 5>;
-  FadType fad1(1., 5);
-  FadType fad2(2., 5, 2, 3.);
+  FadType fad1(5, 1.);
+  FadType fad2(5, 2., 2, 3.);
   fad2 = fad1;
   return fad2;
 }
@@ -373,7 +373,7 @@ constexpr SimpleFad::StaticFadVariable<Scalar, 5> constexprGeneratedAssignment()
 template<class Scalar>
 constexpr SimpleFad::StaticFadVariable<Scalar, 5> constexprTemplatedAssignment() {
   SimpleFad::FadLiteral<Scalar> fad1(1.);
-  SimpleFad::StaticFadVariable<Scalar, 5> fad2(2., 5, 2, 3.);
+  SimpleFad::StaticFadVariable<Scalar, 5> fad2(5, 2., 2, 3.);
   fad2 = fad1;
   return fad2;
 }

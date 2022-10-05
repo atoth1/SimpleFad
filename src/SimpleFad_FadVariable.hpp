@@ -22,13 +22,18 @@ public:
   using deriv_storage_type = typename storage_traits_type::container_type;
   using index_type = typename storage_traits_type::index_type;
 
+  // Default constructor. Value initializes value and storage, so value is initialized
+  // to 0. Statically sized derivative container is initialized to array of 0's, and
+  // dynamically sized derivative container is initialized with size 0.
+  constexpr FadVariable() = default;
+
   // Construct a FadVariable with value set to v and zero-initialized derivatives
-  constexpr FadVariable(const T& v, const index_type n)
+  constexpr FadVariable(const index_type n, const T& v = T())
       : val_(v), dval_(storage_traits_type::create(n)) {
   }
 
   // Construct a FadVariable with value set to v and derivative component id value set to dv
-  constexpr FadVariable(const T& v, const index_type n, const index_type id, const T& dv)
+  constexpr FadVariable(const index_type n, const T& v, const index_type id, const T& dv)
       : val_(v), dval_(storage_traits_type::create(n, id, dv)) {
   }
 
@@ -37,7 +42,7 @@ public:
       : val_(v), dval_(storage_traits_type::create(dv)) {
   }
 
-  // Construct a FadVariable initialized from value/derivative from another expression
+  // Construct a FadVariable initialized with value/derivative from another expression
   template<class Expr>
   constexpr FadVariable(const ExprBase<Expr>& other)
       : val_(other.val()), dval_(storage_traits_type::create(other.dsize())) {

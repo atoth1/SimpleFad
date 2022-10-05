@@ -1,4 +1,4 @@
-set(NAME unit_tests)
+set(UNIT unit_tests)
 set(SOURCES
   FadVariableTests.cpp
   FadLiteralTests.cpp
@@ -6,6 +6,11 @@ set(SOURCES
   UnaryExprTests.cpp
   ComparisonOpsTests.cpp
   )
-add_executable(${NAME} ${SOURCES})
-target_link_libraries(${NAME} ${PROJECT_NAME} GTest::GTest GTest::Main)
-gtest_discover_tests(${NAME})
+add_executable(${UNIT} ${SOURCES})
+target_link_libraries(${UNIT} ${PROJECT_NAME} GTest::GTest GTest::Main)
+gtest_discover_tests(${UNIT})
+
+set(EVAL evaluation_tests)
+add_executable(${EVAL} EvaluationTests.cpp)
+target_link_libraries(${EVAL} ${PROJECT_NAME} GTest::GTest GTest::Main)
+gtest_discover_tests(${EVAL})
