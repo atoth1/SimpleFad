@@ -188,10 +188,11 @@ TYPED_TEST(NewtonsMethodTest, 1DFEM) {
     FadType f{2};
     for (const auto pt : gaussPts) {
       auto trans = translate(pt, mesh[elem], mesh[elem+1]);
+      auto bfn = basisFn(trans, elem, basisFnId);
       f += dreconstruction(elem, l, r) * dbasisFn(elem, basisFnId);
-      f += sin(trans*(1-trans)) * basisFn(trans, elem, basisFnId);
-      f -= sin(reconstruction(trans, elem, l, r)) * basisFn(trans, elem, basisFnId);
-      f -= 2 * basisFn(trans, elem, basisFnId);
+      f += sin(trans*(1-trans)) * bfn;
+      f -= sin(reconstruction(trans, elem, l, r)) * bfn;
+      f -= 2 * bfn;
       f *= 0.5 * (mesh[elem+1] - mesh[elem]);
     }
     return f;

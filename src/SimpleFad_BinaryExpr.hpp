@@ -16,22 +16,24 @@ public:
 
   constexpr explicit BinaryExpr(const BinaryOp& op, const Expr1& expr1,
       const Expr2& expr2)
-      : op_(op), expr1_(expr1), expr2_(expr2) {
+      : op_(op)
+      , expr1_(expr1)
+      , expr2_(expr2)
+      , expr1Val_(expr1_.val())
+      , expr2Val_(expr2_.val()) {
     if (expr1_.dsize() != 0 && expr2_.dsize() != 0) {
       CHECK_CONFORMING_SIZE(expr1_.dsize(), expr2_.dsize())
     }
   }
 
   SIMPLEFAD_CONSTEXPR value_type valImpl() const {
-    return op_.f(expr1_.val(), expr2_.val());
+    return op_.f(expr1Val_, expr2Val_);
   }
 
   SIMPLEFAD_CONSTEXPR value_type dvalImpl(index_type id) const {
-    value_type v1 = expr1_.val();
-    value_type v2 = expr2_.val();
     value_type ret = static_cast<value_type>(0.);
-    if (expr1_.dsize()) ret += op_.dfx(v1, v2) * expr1_.dval(id);
-    if (expr2_.dsize()) ret += op_.dfy(v1, v2) * expr2_.dval(id);
+    if (expr1_.dsize()) ret += op_.dfx(expr1Val_, expr2Val_) * expr1_.dval(id);
+    if (expr2_.dsize()) ret += op_.dfy(expr1Val_, expr2Val_) * expr2_.dval(id);
     return ret;
   }
 
@@ -43,6 +45,8 @@ private:
   BinaryOp op_;
   Expr1 expr1_;
   Expr2 expr2_;
+  value_type expr1Val_;
+  value_type expr2Val_;
 };
 
 }
