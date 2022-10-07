@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.18.0 FATAL_ERROR)
 
 project(SimpleFad VERSION 0.0.0)
 
@@ -11,7 +11,14 @@ option(ENABLE_EXCEPTIONS
 	"Enable runtime exceptions (bounds checks, valid function inputs, etc.)."
 	OFF)
 
-option(ENABLE_TESTING "Enable building of unit tests." OFF)
+option(ENABLE_TESTING "Enable building of unit tests." ON)
+
+# Tests demonstrating Newton's method utilize LAPACK routines with name mangling hard-coded
+# to the function name followed by a single underscore. If LAPACK library symbol names don't
+# match this convention these particular tests may be disabled with this option.
+option(ENABLE_NEWTON_TESTS
+	"Enable building of Newton's method tests which include hard-coded LAPACK symbol names."
+	ON)
 
 # Surprised that the gcc standard library on my machine supports this, so why not make
 # it an option. Expecially since there look to be some proposals to make more/most of
@@ -22,6 +29,7 @@ option(CMATH_SUPPORTS_CONSTEXPR
 
 add_subdirectory(src ${CMAKE_CURRENT_BINARY_DIR}/src)
 if (ENABLE_TESTING)
+  find_package(LAPACK)
   add_subdirectory(test ${CMAKE_CURRENT_BINARY_DIR}/test)
 endif()
 
