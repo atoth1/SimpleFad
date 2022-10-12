@@ -66,25 +66,25 @@ constexpr auto makeBinaryOp(const FOp& f, const DFXOp& dfx, const DFYOp& dfy) {
     return BinaryExpr<decltype(OP), FadLiteral<v_t>, Expr>(OP, l, e.self()); \
   }
 
-static constexpr auto ADD_OP = makeBinaryOp(
+inline constexpr auto ADD_OP = makeBinaryOp(
     [](const auto& x, const auto& y) {return x+y;},
     [](const auto& x, const auto& y) {return static_cast<decltype(x)>(1);},
     [](const auto& x, const auto& y) {return static_cast<decltype(x)>(1);});
 GENERATE_BINARY_OVERLOADS(operator+, ADD_OP)
 
-static constexpr auto SUBTRACT_OP = makeBinaryOp(
+inline constexpr auto SUBTRACT_OP = makeBinaryOp(
     [](const auto& x, const auto& y) {return x-y;},
     [](const auto& x, const auto& y) {return static_cast<decltype(x)>(1);},
     [](const auto& x, const auto& y) {return static_cast<decltype(x)>(-1);});
 GENERATE_BINARY_OVERLOADS(operator-, SUBTRACT_OP)
 
-static constexpr auto MULTIPLY_OP = makeBinaryOp(
+inline constexpr auto MULTIPLY_OP = makeBinaryOp(
     [](const auto& x, const auto& y) {return x*y;},
     [](const auto& x, const auto& y) {return y;},
     [](const auto& x, const auto& y) {return x;});
 GENERATE_BINARY_OVERLOADS(operator*, MULTIPLY_OP)
 
-static constexpr auto DIVIDE_OP = makeBinaryOp(
+inline constexpr auto DIVIDE_OP = makeBinaryOp(
     [](const auto& x, const auto& y) {
       CHECK_WITHIN_DOMAIN(y != 0)
       return x/y;
@@ -97,7 +97,7 @@ static constexpr auto DIVIDE_OP = makeBinaryOp(
     );
 GENERATE_BINARY_OVERLOADS(operator/, DIVIDE_OP)
 
-static constexpr auto POW_OP = makeBinaryOp(
+inline constexpr auto POW_OP = makeBinaryOp(
     [](const auto& x, const auto& y) {return std::pow(x, y);},
     [](const auto& x, const auto& y) {return y * std::pow(x, y-1);},
     [](const auto& x, const auto& y) {return std::pow(x, y) * std::log(x);});
@@ -111,7 +111,7 @@ GENERATE_BINARY_OVERLOADS(pow, POW_OP)
    This is fine as long as "SimpleFad_ComparisonOps.hpp" is included. There is a symantic
    difference though, as the std versions evaluate eagerly and return a const reference to
    the type of the inputs, and the following overloads return a lazily evaluated BinaryExpr.*/
-static constexpr auto MAX_OP = makeBinaryOp(
+inline constexpr auto MAX_OP = makeBinaryOp(
     [](const auto& x, const auto& y) {return x > y ? x : y;},
     [](const auto& x, const auto& y) {
       using value_type = decltype(x);
@@ -123,7 +123,7 @@ static constexpr auto MAX_OP = makeBinaryOp(
     });
 GENERATE_BINARY_OVERLOADS(max, MAX_OP)
 
-static constexpr auto MIN_OP = makeBinaryOp(
+inline constexpr auto MIN_OP = makeBinaryOp(
     [](const auto& x, const auto& y) {return x < y ? x : y;},
     [](const auto& x, const auto& y) {
       using value_type = decltype(x);
@@ -135,7 +135,7 @@ static constexpr auto MIN_OP = makeBinaryOp(
     });
 GENERATE_BINARY_OVERLOADS(min, MIN_OP)
 
-static constexpr auto ATAN2_OP = makeBinaryOp(
+inline constexpr auto ATAN2_OP = makeBinaryOp(
     [](const auto& x, const auto& y) {
       CHECK_WITHIN_DOMAIN(x != 0 || y != 0)
       return std::atan2(x, y);

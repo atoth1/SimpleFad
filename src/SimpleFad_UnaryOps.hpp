@@ -45,17 +45,17 @@ constexpr auto makeUnaryOp(const FOp& f, const DFOp& df) {
     return UnaryExpr<decltype(OP), Expr>(OP, e.self()); \
   }
 
-static constexpr auto UNARY_PLUS_OP = makeUnaryOp(
+inline constexpr auto UNARY_PLUS_OP = makeUnaryOp(
     [](const auto& x) {return +x;},
     [](const auto& x) {return static_cast<decltype(x)>(1);});
 GENERATE_UNARY_OVERLOADS(operator+, UNARY_PLUS_OP)
 
-static constexpr auto UNARY_MINUS_OP = makeUnaryOp(
+inline constexpr auto UNARY_MINUS_OP = makeUnaryOp(
     [](const auto& x) {return -x;},
     [](const auto& x) {return static_cast<decltype(x)>(-1);});
 GENERATE_UNARY_OVERLOADS(operator-, UNARY_MINUS_OP)
 
-static constexpr auto ABS_OP = makeUnaryOp(
+inline constexpr auto ABS_OP = makeUnaryOp(
     [](const auto& x) {return std::abs(x);},
     [](const auto& x) {
       using value_type = decltype(x);
@@ -64,12 +64,12 @@ static constexpr auto ABS_OP = makeUnaryOp(
     });
 GENERATE_UNARY_OVERLOADS(abs, ABS_OP)
 
-static constexpr auto EXP_OP = makeUnaryOp(
+inline constexpr auto EXP_OP = makeUnaryOp(
     [](const auto& x) {return std::exp(x);},
     [](const auto& x) {return std::exp(x);});
 GENERATE_UNARY_OVERLOADS(exp, EXP_OP)
 
-static constexpr auto EXP2_OP = makeUnaryOp(
+inline constexpr auto EXP2_OP = makeUnaryOp(
     [](const auto& x) {return std::exp2(x);},
     [](const auto& x) {
       using value_type = decltype(x);
@@ -77,7 +77,7 @@ static constexpr auto EXP2_OP = makeUnaryOp(
     });
 GENERATE_UNARY_OVERLOADS(exp2, EXP2_OP)
 
-static constexpr auto LOG_OP = makeUnaryOp(
+inline constexpr auto LOG_OP = makeUnaryOp(
     [](const auto& x) {
       CHECK_WITHIN_DOMAIN(x > static_cast<decltype(x)>(0))
       return std::log(x);
@@ -88,7 +88,7 @@ static constexpr auto LOG_OP = makeUnaryOp(
     });
 GENERATE_UNARY_OVERLOADS(log, LOG_OP)
 
-static constexpr auto LOG2_OP = makeUnaryOp(
+inline constexpr auto LOG2_OP = makeUnaryOp(
     [](const auto& x) {
       CHECK_WITHIN_DOMAIN(x > static_cast<decltype(x)>(0))
       return std::log2(x);
@@ -100,7 +100,7 @@ static constexpr auto LOG2_OP = makeUnaryOp(
     });
 GENERATE_UNARY_OVERLOADS(log2, LOG2_OP)
 
-static constexpr auto LOG10_OP = makeUnaryOp(
+inline constexpr auto LOG10_OP = makeUnaryOp(
     [](const auto& x) {
       CHECK_WITHIN_DOMAIN(x > static_cast<decltype(x)>(0))
       return std::log10(x);
@@ -112,7 +112,7 @@ static constexpr auto LOG10_OP = makeUnaryOp(
     });
 GENERATE_UNARY_OVERLOADS(log10, LOG10_OP)
 
-static constexpr auto SQRT_OP = makeUnaryOp(
+inline constexpr auto SQRT_OP = makeUnaryOp(
     [](const auto& x) {
       // Value obviously fine at 0, but infinite derivative.
       using value_type = decltype(x);
@@ -126,7 +126,7 @@ static constexpr auto SQRT_OP = makeUnaryOp(
     });
 GENERATE_UNARY_OVERLOADS(sqrt, SQRT_OP)
 
-static constexpr auto CBRT_OP = makeUnaryOp(
+inline constexpr auto CBRT_OP = makeUnaryOp(
     [](const auto& x) {
       // Value obviously fine, but infinite derivative at 0.
       using value_type = decltype(x);
@@ -141,17 +141,17 @@ static constexpr auto CBRT_OP = makeUnaryOp(
     });
 GENERATE_UNARY_OVERLOADS(cbrt, CBRT_OP)
 
-static constexpr auto COS_OP = makeUnaryOp(
+inline constexpr auto COS_OP = makeUnaryOp(
     [](const auto& x) {return std::cos(x);},
     [](const auto& x) {return -std::sin(x);});
 GENERATE_UNARY_OVERLOADS(cos, COS_OP)
 
-static constexpr auto SIN_OP = makeUnaryOp(
+inline constexpr auto SIN_OP = makeUnaryOp(
     [](const auto& x) {return std::sin(x);},
     [](const auto& x) {return std::cos(x);});
 GENERATE_UNARY_OVERLOADS(sin, SIN_OP)
 
-static constexpr auto TAN_OP = makeUnaryOp(
+inline constexpr auto TAN_OP = makeUnaryOp(
     [](const auto& x) {return std::tan(x);},
     [](const auto& x) {
       using value_type = decltype(x);
@@ -160,7 +160,7 @@ static constexpr auto TAN_OP = makeUnaryOp(
     });
 GENERATE_UNARY_OVERLOADS(tan, TAN_OP)
 
-static constexpr auto ACOS_OP = makeUnaryOp(
+inline constexpr auto ACOS_OP = makeUnaryOp(
     [](const auto& x) {
       // Infinite derivatives at +/-1.
       using value_type = decltype(x);
@@ -173,7 +173,7 @@ static constexpr auto ACOS_OP = makeUnaryOp(
     });
 GENERATE_UNARY_OVERLOADS(acos, ACOS_OP)
 
-static constexpr auto ASIN_OP = makeUnaryOp(
+inline constexpr auto ASIN_OP = makeUnaryOp(
     [](const auto& x) {
       // Infinite derivatives at +/-1.
       using value_type = decltype(x);
@@ -186,7 +186,7 @@ static constexpr auto ASIN_OP = makeUnaryOp(
     });
 GENERATE_UNARY_OVERLOADS(asin, ASIN_OP)
 
-static constexpr auto ATAN_OP = makeUnaryOp(
+inline constexpr auto ATAN_OP = makeUnaryOp(
     [](const auto& x) {return std::atan(x);},
     [](const auto& x) {
       auto one = static_cast<decltype(x)>(1);
@@ -194,17 +194,17 @@ static constexpr auto ATAN_OP = makeUnaryOp(
     });
 GENERATE_UNARY_OVERLOADS(atan, ATAN_OP)
 
-static constexpr auto COSH_OP = makeUnaryOp(
+inline constexpr auto COSH_OP = makeUnaryOp(
     [](const auto& x) {return std::cosh(x);},
     [](const auto& x) {return std::sinh(x);});
 GENERATE_UNARY_OVERLOADS(cosh, COSH_OP)
 
-static constexpr auto SINH_OP = makeUnaryOp(
+inline constexpr auto SINH_OP = makeUnaryOp(
     [](const auto& x) {return std::sinh(x);},
     [](const auto& x) {return std::cosh(x);});
 GENERATE_UNARY_OVERLOADS(sinh, SINH_OP)
 
-static constexpr auto TANH_OP = makeUnaryOp(
+inline constexpr auto TANH_OP = makeUnaryOp(
     [](const auto& x) {return std::tanh(x);},
     [](const auto& x) {
       using value_type = decltype(x);
@@ -213,7 +213,7 @@ static constexpr auto TANH_OP = makeUnaryOp(
     });
 GENERATE_UNARY_OVERLOADS(tanh, TANH_OP)
 
-static constexpr auto ACOSH_OP = makeUnaryOp(
+inline constexpr auto ACOSH_OP = makeUnaryOp(
     [](const auto& x) {
       // Value fine at 1, but derivative is infinite.
       using value_type = decltype(x);
@@ -226,7 +226,7 @@ static constexpr auto ACOSH_OP = makeUnaryOp(
     });
 GENERATE_UNARY_OVERLOADS(acosh, ACOSH_OP)
 
-static constexpr auto ASINH_OP = makeUnaryOp(
+inline constexpr auto ASINH_OP = makeUnaryOp(
     [](const auto& x) {return std::asinh(x);},
     [](const auto& x) {
       auto one = static_cast<decltype(x)>(1);
@@ -234,7 +234,7 @@ static constexpr auto ASINH_OP = makeUnaryOp(
     });
 GENERATE_UNARY_OVERLOADS(asinh, ASINH_OP)
 
-static constexpr auto ATANH_OP = makeUnaryOp(
+inline constexpr auto ATANH_OP = makeUnaryOp(
     [](const auto& x) {
       using value_type = decltype(x);
       CHECK_WITHIN_DOMAIN(x > static_cast<value_type>(-1) && x < static_cast<value_type>(1))
